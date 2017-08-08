@@ -5,28 +5,52 @@ This file describes how to install and use the rfscat software,
 the KNMI software package for simulation of scatterometer instruments.
 Note that this software depends on the genscat library which must be
 installed first.
-------------------------
+
 Installation instructions for rfscat and genscat:
 
 download both rfscat and genscat folders
 Linux system:
 
-> cd genscat
-> ./Set_Makeoptions
-> make 
+ cd genscat
+1: set up compilers (exsample):
 
-> cd ../rfscat
-> make
+GENSCAT_LINK=gfortran
+export GENSCAT_LINK
+
+GENSCAT_CLINK=gcc
+export GENSCAT_CLINK
+
+GENSCAT_SHLINK=gfortran
+export GENSCAT_SHLINK
+
+GENSCAT_F90=gfortran
+export GENSCAT_F90
+
+GENSCAT_F77=gfortran
+export GENSCAT_F77
+
+GENSCAT_CC=gcc
+export GENSCAT_CC
+
+2: ./Set_Makeoptions
+
+   make 
+
+3: cd ../rfscat
+
+   make
 
 Usage:
-==>define the simulation settings, these are defined in an ascii input
+define the simulation settings, these are defined in an ascii input
    file. Just take a copy of rfscat_settings.dat and modify it
    to fit your needs
-==>run the program: ./rfscat_simulation <your rfscat settings file>
-==>names of the output files are defined in the settings file
+   
+run the program: ./rfscat_simulation <your rfscat settings file>
+
+names of the output files are defined in the settings file
 
 
-Testing data files (provided seperately): 
+Testing data files: please contact scat@knmi.nl 
 PL1B data
 LUT (look up tables)
                 
