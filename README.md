@@ -11,8 +11,10 @@ Installation instructions for rfscat and genscat:
 download both rfscat and genscat folders
 Linux system:
 
- cd genscat
-1: set up compilers (exsample):
+
+1: cd genscat
+
+set up compilers (exsample):
 
 GENSCAT_LINK=gfortran
 export GENSCAT_LINK
