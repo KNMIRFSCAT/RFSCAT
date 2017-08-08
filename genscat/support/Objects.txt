@@ -1,0 +1,108 @@
+# this file is part of the GENSCAT make system
+# and will (indirectly) be included in the users Makefile
+
+# include all Objects.txt files of the subdirectories in support
+
+include ${GENSCAT}/support/adjoint/Objects.txt
+include ${GENSCAT}/support/ascii/Objects.txt
+include ${GENSCAT}/support/auco/Objects.txt
+include ${GENSCAT}/support/BFGS/Objects.txt
+include ${GENSCAT}/support/binning/Objects.txt
+include ${GENSCAT}/support/bufr/Objects.txt
+include ${GENSCAT}/support/byteswap/Objects.txt
+include ${GENSCAT}/support/cersat/Objects.txt
+include ${GENSCAT}/support/Compiler_Features/Objects.txt
+include ${GENSCAT}/support/convert/Objects.txt
+include ${GENSCAT}/support/c_support/Objects.txt
+include ${GENSCAT}/support/datetime/Objects.txt
+include ${GENSCAT}/support/ErrorHandler/Objects.txt
+include ${GENSCAT}/support/file/Objects.txt
+include ${GENSCAT}/support/gnuplot_wrapper/Objects.txt
+include ${GENSCAT}/support/grib/Objects.txt
+include ${GENSCAT}/support/hdf5/Objects.txt
+include ${GENSCAT}/support/linked_list/Objects.txt
+include ${GENSCAT}/support/multifft/Objects.txt
+include ${GENSCAT}/support/num/Objects.txt
+include ${GENSCAT}/support/option/Objects.txt
+include ${GENSCAT}/support/pfs/Objects.txt
+include ${GENSCAT}/support/random/Objects.txt
+include ${GENSCAT}/support/singletonfft/Objects.txt
+include ${GENSCAT}/support/singularity_analysis/Objects.txt
+include ${GENSCAT}/support/sort/Objects.txt
+include ${GENSCAT}/support/stat/Objects.txt
+include ${GENSCAT}/support/statistics/Objects.txt
+include ${GENSCAT}/support/stringtools/Objects.txt
+include ${GENSCAT}/support/tempfiles/Objects.txt
+include ${GENSCAT}/support/verbosity/Objects.txt
+
+# add the object files produceded by this module
+# to the list of all genscat  objects
+
+GENSCAT_OBJECTS_SUPPORT =             \
+  $(GENSCAT_OBJECTS_SUPPORT_ADJOINT)  \
+  $(GENSCAT_OBJECTS_SUPPORT_ASCII)    \
+  $(GENSCAT_OBJECTS_SUPPORT_AUCO)     \
+  $(GENSCAT_OBJECTS_SUPPORT_BFGS)     \
+  $(GENSCAT_OBJECTS_SUPPORT_BINNING)  \
+  $(GENSCAT_OBJECTS_SUPPORT_BUFR)     \
+  $(GENSCAT_OBJECTS_SUPPORT_BYTESWAP) \
+  $(GENSCAT_OBJECTS_SUPPORT_CERSAT)   \
+  $(GENSCAT_OBJECTS_SUPPORT_COMPILER_FEATURES) \
+  $(GENSCAT_OBJECTS_SUPPORT_CONVERT)      \
+  $(GENSCAT_OBJECTS_SUPPORT_C_SUPPORT)    \
+  $(GENSCAT_OBJECTS_SUPPORT_DATETIME)     \
+  $(GENSCAT_OBJECTS_SUPPORT_ERRORHANDLER) \
+  $(GENSCAT_OBJECTS_SUPPORT_FILE)         \
+  $(GENSCAT_OBJECTS_SUPPORT_GNUPLOT)      \
+  $(GENSCAT_OBJECTS_SUPPORT_GRIB)         \
+  $(GENSCAT_OBJECTS_SUPPORT_HDF5)         \
+  $(GENSCAT_OBJECTS_SUPPORT_LINKED_LIST)  \
+  $(GENSCAT_OBJECTS_SUPPORT_MULTIFFT)     \
+  $(GENSCAT_OBJECTS_SUPPORT_NUM)          \
+  $(GENSCAT_OBJECTS_SUPPORT_OPTION)       \
+  $(GENSCAT_OBJECTS_SUPPORT_PFS)          \
+  $(GENSCAT_OBJECTS_SUPPORT_RANDOM)       \
+  $(GENSCAT_OBJECTS_SUPPORT_SINGLETONFFT) \
+  $(GENSCAT_OBJECTS_SUPPORT_SA)           \
+  $(GENSCAT_OBJECTS_SUPPORT_SORT)         \
+  $(GENSCAT_OBJECTS_SUPPORT_STAT)         \
+  $(GENSCAT_OBJECTS_SUPPORT_STATISTICS)   \
+  $(GENSCAT_OBJECTS_SUPPORT_STRTOOLS)     \
+  $(GENSCAT_OBJECTS_SUPPORT_TMPFILES)     \
+  $(GENSCAT_OBJECTS_SUPPORT_VERBOSITY) 
+
+# add the library in which the *.mod file can be found
+# to the list of all module libraries
+
+GENSCAT_MOD_INC_SUPPORT =              \
+   $(GENSCAT_MOD_INC_SUPPORT_ADJOINT)  \
+   $(GENSCAT_MOD_INC_SUPPORT_ASCII)    \
+   $(GENSCAT_MOD_INC_SUPPORT_AUCO)     \
+   $(GENSCAT_MOD_INC_SUPPORT_BFGS)     \
+   $(GENSCAT_MOD_INC_SUPPORT_BINNING)  \
+   $(GENSCAT_MOD_INC_SUPPORT_BUFR)     \
+   $(GENSCAT_MOD_INC_SUPPORT_BYTESWAP) \
+   $(GENSCAT_MOD_INC_SUPPORT_CERSAT)   \
+   $(GENSCAT_MOD_INC_SUPPORT_COMPILER_FEATURES) \
+   $(GENSCAT_MOD_INC_SUPPORT_CONVERT)      \
+   $(GENSCAT_MOD_INC_SUPPORT_C_SUPPORT)    \
+   $(GENSCAT_MOD_INC_SUPPORT_DATETIME)     \
+   $(GENSCAT_MOD_INC_SUPPORT_ERRORHANDLER) \
+   $(GENSCAT_MOD_INC_SUPPORT_FILE)         \
+   $(GENSCAT_MOD_INC_SUPPORT_GNUPLOT)      \
+   $(GENSCAT_MOD_INC_SUPPORT_GRIB)         \
+   $(GENSCAT_MOD_INC_SUPPORT_HDF5)         \
+   $(GENSCAT_MOD_INC_SUPPORT_LINKED_LIST)  \
+   $(GENSCAT_MOD_INC_SUPPORT_MULTIFFT)     \
+   $(GENSCAT_MOD_INC_SUPPORT_NUM)          \
+   $(GENSCAT_MOD_INC_SUPPORT_OPTION)       \
+   $(GENSCAT_MOD_INC_SUPPORT_PFS)          \
+   $(GENSCAT_MOD_INC_SUPPORT_RANDOM)       \
+   $(GENSCAT_MOD_INC_SUPPORT_SINGLETONFFT) \
+   $(GENSCAT_MOD_INC_SUPPORT_SA)           \
+   $(GENSCAT_MOD_INC_SUPPORT_SORT)         \
+   $(GENSCAT_MOD_INC_SUPPORT_STAT)         \
+   $(GENSCAT_MOD_INC_SUPPORT_STATISTICS)   \
+   $(GENSCAT_MOD_INC_SUPPORT_STRTOOLS)     \
+   $(GENSCAT_MOD_INC_SUPPORT_TMPFILES)     \
+   $(GENSCAT_MOD_INC_SUPPORT_VERBOSITY)

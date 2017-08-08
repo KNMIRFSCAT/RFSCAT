@@ -1,0 +1,38 @@
+ Starting fileunit test program
+ ===== lun_manager ======
+ fileunit:  21  was not in use !!!
+ free_lun returns without freeing any fileunit
+ fileunit:  88  was not in the range that is handled
+ by this module ! ( 20  -  29 )
+ free_lun returns without freeing any fileunit
+ fileunit:  88  was not in the range that is handled
+ by this module ! ( 20  -  29 )
+ enable_lun returns without enabling any fileunit
+ fileunit:  88  was not in the range that is handled
+ by this module ! ( 20  -  29 )
+ disable_lun returns without disabling any fileunit
+ unit:  22  is used?:  F
+ unit:  22  is used?:  T
+ start of inspect_luns
+  lun  -1  does NOT exist
+  lun  0  is open
+  lun  5  is open
+  lun  6  is open
+  lun  22  is open
+  lun  22  has a name: TestLunManager.F90
+ end of inspect_luns
+ fileunit:  22  is still in use !
+ disabling it is only possible if it is not used !
+ disable_lun returns without disabling any fileunit
+ fileunit:  20  is in use
+ fileunit:  21  is disabled
+ fileunit:  22  is in use
+ fileunit:  23  is still available
+ fileunit:  24  is still available
+ fileunit:  25  is still available
+ fileunit:  26  is still available
+ fileunit:  27  is still available
+ fileunit:  28  is still available
+ fileunit:  29  is still available
+ fileunit:  22  was already enabled !!!
+ enable_lun returns without enabling any fileunit

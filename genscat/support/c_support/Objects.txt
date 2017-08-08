@@ -1,0 +1,18 @@
+# this file is part of the GENSCAT make system
+# and will (indirectly) be included in the users Makefile
+
+# define a shortcut for this directory, relative to
+# the GENSCAT root dir
+
+DEP_C_SUPPORT = ${GENSCAT}/support/c_support/
+
+# add the object files produceded by this module
+# to the list of all genscat  objects
+
+GENSCAT_OBJECTS_SUPPORT_C_SUPPORT = $(DEP_C_SUPPORT)c_support.o \
+                                    $(DEP_C_SUPPORT)F90_c_support.o 
+
+# add the library in which the *.mod file can be found
+# to the list of all module libraries
+
+GENSCAT_MOD_INC_SUPPORT_C_SUPPORT = $(MODINCFLAG)$(DEP_C_SUPPORT)

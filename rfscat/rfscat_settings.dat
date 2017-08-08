@@ -1,0 +1,366 @@
+#####################################################################
+# This is an example file that may be used to choose
+# the settings that will be used by the rfscat_simulation program.
+#
+# Usage is as follows:
+#   ./rfscat_simulation <settings_file>
+#
+# The settings_file is the only allowed commandline parameter after
+# the executable name. If it is not given, then the default name
+# rfscat_settings.dat will be used.
+#
+# This settings file uses the syntax "key=value" to specify values.
+# The order of the keys is not relevant.
+# Also, not all keys need to be present. If some are missing, the 
+# program will use a (hopefully suitable) default value.
+#
+# keys are converted to lower case before being interpreted
+# so 'SETTING = 123' is equivalent to "setting = 123"
+# but values are NOT converted to lowercase.
+#
+# Optionally, after a value definition a small comment may be added
+# after an exclamation mark like this:
+#     "key=value ! unit [m/s]"
+#
+# Comment lines in this file start with a hash '#' character,
+# and any number of comment lines may be inserted in this file.
+! (also lines starting with a '!' are taken to be a comment)
+#
+   # white space before comments or key/value pairs is ignored
+   ! ditto for comment lines starting with !
+#
+# This settings file should be fairly insensitive to changes in whitespace
+# between lowercase/uppercase.
+#
+#                J. de Kloe, KNMI, 2009-2013
+#
+#####################################################################
+
+#####################################################################
+# definition of simulation inputs and settings
+#####################################################################
+
+#
+# The random number generator takes a key for initialisation
+# and it's state may be saved to be used in a next run
+#
+
+# only used for the first run if save_random_state is .true.
+random_seed = 123454
+# setting this to .true. implies auto-reloading the state in a next run
+# set it so false if you wish to have a reproducible set of random
+# numbers for each run of the simulator.
+save_random_state = .true.
+
+# the file used to save the random state when the above switch is .true.
+random_status_file = 'results/random_status_file.dat'
+
+# suppress printing results to stdout
+# (use this only if you are sure all is working fine)
+silent = .false.
+
+#
+# The input geometry is described in Pseudo L1B files, and is
+# controlled by the following switches:
+#
+
+pseudo_L1b_file_path         = ./testdata/
+pseudo_L1b_file_name         = KVH_prf75_2000km_25km_py_optim_boxcar_cfosat_final_only_col_19.l1b
+use_2nd_pseudo_L1B_file      = .false.
+pseudo_L1b_2nd_file_name     = CH_a00_01_bestsystem.l1b
+use_3rd_pseudo_L1B_file      = .false.
+pseudo_L1b_3rd_file_name     = CP_a00_01_bestsystem.l1b
+
+#
+# The winds used as starting point for the simulation are defined
+# by the following switches:
+#
+
+wind_source                  = wind_source_constant_speed
+# possible values for wind_source are the following strings:
+#     wind_source_u_v_grid
+#     wind_source_sp_dir_grid
+#     wind_source_from_windfile
+#     wind_source_random
+#     wind_source_constant_vector
+#     wind_source_constant_speed # not yet implemented
+
+#
+# in case wind_source=wind_source_u_v_grid
+# ==>parameters that define the u,v grid
+#
+u_startval    = -25.0 ! m/s
+v_startval    = -25.0 ! m/s
+u_step        =   2.0 ! 0.5 !  2.0 ! 1.0 ! m/s
+v_step        =   2.0 ! 0.5 !  2.0 ! 1.0 ! m/s
+nr_of_u_steps =    26 ! 101 !   26 !  51
+nr_of_v_steps =    26 ! 101 !   26 !  51
+
+#
+# in case wind_source=wind_source_sp_dir_grid
+# ==>parameters that define the u,v grid
+#
+sp_startval     = 0.2 ! m/s
+dir_startval    = 0.0 ! deg
+sp_step         = 0.2 ! 0.5 ! 1.0 ! 0.2 ! m/s
+dir_step        = 1.0 ! 0.5 ! 2.0 ! 1.0 ! deg
+nr_of_sp_steps  = 125 !  50 !  25 ! 125
+nr_of_dir_steps = 360 ! 720 ! 180 ! 360
+
+#
+# in case wind_source=wind_source_random
+# and wind_distribution=wind_distribution_Rayleigh
+# ==>parameter that defines the width of the Gaussian for 
+#    both u and v components
+#
+gaussian_dist_halfwidth = 5.5 ! m/s
+
+#
+# in case wind_source=wind_source_random
+# and wind_distribution=wind_distribution_Weibull
+# ==>parameters that define the shape of the Weibull distribution
+#    used for windspeed.
+#
+# t.b.d.
+
+#
+# in case wind_source=wind_source_constant_vector
+# ==>constant components for u,v to be used
+#
+constant_u_input = 7.5 ! [m/s]
+constant_v_input = 7.5 ! [m/s]
+
+#
+# in case wind_source=wind_source_constant_speed
+# ==>constant wind speed to be used
+#
+constant_speed_input = 8 ! [m/s]
+
+# 
+# minimum and maximum allowed wind values to apply to
+# the defined wind vectors.
+# These are imposed on all types of windsources, except on
+# constant u,v and constant speed inputs.
+# Random winds are only generated inside these boundaries
+# winds from file or defined by a grid are discarded when
+# they fall outside the allowed range.
+# The number of available winds is automatically adapted accordingly.
+#
+min_wind =  0.0 !   0.8 ! [m/s]
+max_wind = 25.0 !  25.0 ! [m/s]
+
+#
+# in case wind_source=wind_source_from_windfile: 
+# ==>input file to use 
+#
+windfilename                 = "./windfiles/windfile.dat"
+
+#
+# in case wind_source=wind_source_from_windfile:
+# ==>fill latlon values from windfile
+#
+use_latlon_from_windfile     = .false.
+
+#
+# Then follow some options that determine how much winds will be simulated
+#
+
+# take exactly the same number of input winds as there are nodes
+# defined in the Pseudo L1B file.
+# (this is not used when defining winds on a grid, since then the grid
+#  size determines the number of winds to be simulated)
+#
+set_nr_winds_to_nr_nodes     = .true.
+
+#
+# define manually how much winds are to be simulated
+#
+set_nr_winds_manually        = .true.
+
+# Note that if neither set_nr_winds_to_nr_nodes nor set_nr_winds_manually
+# is set, then a default number of winds is simulated as given by
+# the parameter nr_winds_default (currently 1000 as defined in 
+# simulation_settings.F90)
+
+#
+# in case set_nr_winds_manually is set:
+# ==>number of winds to simulate
+#
+nr_winds_manual              = 43000
+
+#
+# in case wind_source=wind_source_random:
+# ==>define what distribution to use for generating random winds
+#
+wind_distribution            = wind_distribution_Rayleigh
+# possible values for wind_distribution are the following strings:
+#     wind_distribution_Weibull [not yet implemented!]
+#     wind_distribution_Rayleigh
+#     wind_distribution_Uniform
+
+#
+# add Gaussian distributed noise to the 2 wind components
+# (this is independent of the choice of wind_source)
+#
+add_noise_to_input_windfield = .false.
+
+#
+# in case add_noise_to_input_windfield=.true.
+# ==>width to be used for the noise distribution
+#
+stdev_for_windfield_noise    = 0.0 ! [m/s]
+
+#
+# filer out views with snr of 0 (seems to happen sometimes
+# in the Pseudo L1B files of the old rfscat project)
+#
+dont_use_views_with_snr_0    = .true.
+
+#
+# filter out inversion results at the LUT edge. This typically occurs
+# for out of range input windspeed close to zero. Currently only the 
+# check only inspects the lower windspeed LUT edge of 0.2 m/s)
+#
+exclude_LUT_edge_solutions   = .true.
+
+#
+# resolution used in the calc_noise_due_to_windvar routine which
+# adds noise to the sigma0 values due to wind variability within the wvc
+#
+wvc_resolution               = 25 ! [km]
+
+# add geophysical noise to the sigma0 values?
+add_geo_noise                = .true.
+
+# add instrumental noise to the sigma0 values?
+add_instr_noise              = .true.
+
+# choose one of these: [kp|constant]
+instr_noise_method           = kp
+
+# value to use in case constant instr. noise method is choosen
+constant_instr_noise         = 0.05
+
+# which geophysical noise model should be used?
+# choose one of these: [old|exponential_qscat|exponential_ascat]
+geo_noise_model              = old
+
+# how to add the noise terms? 
+# Note that all studies upto 2010 have used the mutiplicative method. 
+# The newly added sqrt_sum method has not yet been extensively tested 
+# or validated. Choose one of [multiplicative|sqrt_sum]
+noise_add_method             = multiplicative
+
+#####################################################################
+# definition of inversion module inputs
+#####################################################################
+
+#
+# path where the binary look-up-tables defining the GMF for the
+# different bands and polarisations can be found
+#
+LUT_path = nrcs_luts/
+
+#
+# filenames to use for the look-up-tables defining the GMF for the
+# different bands (C or Ku) and polarisations (VV, HH or POL) can be found
+# 
+LUT_C_VV_filename   = cmod5_c_vv.dat
+LUT_C_HH_filename   = c_hh.dat
+LUT_C_POL_filename  = c_pol.dat
+LUT_KU_VV_filename  = ku_vv.dat
+LUT_KU_HH_filename  = ku_hh.dat
+LUT_KU_POL_filename = ku_pol.dat
+
+# when set to true, this forces all 144 probed wind solutions to
+# be reported in the output file
+# Beware this will make the output file very large when simulating
+# a large number of nodes/winds
+get_all_winddirs = .false.
+
+# a weight factor to be able to combine polarimetric measurements	
+# with normal VV/HH measurements (tested for RFSCAT only)
+polarimetric_weight = 1.0
+
+# a weight factor to be able to combine doppler measurements
+# with normal VV/HH measurements (tested for RFSCAT only)
+doppler_weight = 1.0e5
+
+#
+# in case of using doppler measurements, allow adding a fixed
+# ocean current vector to the simulation to offset the doppler result
+# ==>constant components for u,v to be used
+#
+ocean_current_constant_u_input = 0.0 ! [m/s]
+ocean_current_constant_v_input = 0.0 ! [m/s]
+
+# only used to take Doppler effect into account
+doppler_base_frequency = 5.255e9 ! [Hz] for ascat/C-band
+
+#####################################################################
+# definition of simulation outputs
+#####################################################################
+
+#
+# output file to be used for storing inversion and FoM results
+# (in ascii format)
+# Note: it is only written when: save_vector_results=.true.
+#
+outputfile_vector   = results/rfscat_result.dat
+
+#
+# a minimal output file, as requested by Maria Belmonte,
+# having only a subset of the normal vector ascii output file
+# (in ascii format)
+# Note: it is only written when: save_minimal_vector_results=.true.
+#
+outputfile_vector_minimal = results/rfscat_result_minimal.dat
+
+#
+# output file to be used for storing binned inversion results
+# (in ascii format, suitable for generating 2D contour plots)
+# Note: it is only written when: save_binned_results=.true.
+#
+outputfile_binned   = results/rfscat_result_binned.dat
+
+#
+# output file to be used for storing a copy of all settings used
+# (including settings of the inversion module, that cannot be set by
+# modifying this settings file, but are hardcoded as CPP definitions
+# in the inversion.F90 module in genscat)
+#
+outputfile_settings = results/rfscat_settings.txt
+
+#
+# switch to activate generation of the vector output file
+# (with a name as defined by outputfile_vector)
+#
+save_vector_results = .true.
+
+#
+# switch to activate generation of the minimal vector output file
+# (with a name as defined by outputfile_vector_minimal)
+#
+save_minimal_vector_results = .true.
+
+#
+# switch to activate generation of the binned output file
+# (with a name as defined by outputfile_binned)
+#
+save_binned_results = .true.
+
+#
+# switch to activate generation of the settings output file
+# (with a name as defined by outputfile_settings)
+#
+save_settings = .true.
+
+#
+# use higher resolution bins to store the results
+# only used when save_binned_results=.true.
+#
+hi_res_bins                  = .false.
+
+#####################################################################
+# end of settings file
+#####################################################################

@@ -1,0 +1,17 @@
+# this file is part of the GENSCAT make system
+# and will (indirectly) be included in the users Makefile
+
+# define a shortcut for this directory, relative to
+# the GENSCAT root dir
+
+DEP_STRTOOLS = ${GENSCAT}/support/stringtools/
+
+# add the object files produceded by this module
+# to the list of all genscat  objects
+
+GENSCAT_OBJECTS_SUPPORT_STRTOOLS = $(DEP_STRTOOLS)stringtools.o
+
+# add the library in which the *.mod file can be found
+# to the list of all module libraries
+
+GENSCAT_MOD_INC_SUPPORT_STRTOOLS = $(MODINCFLAG)$(DEP_STRTOOLS)

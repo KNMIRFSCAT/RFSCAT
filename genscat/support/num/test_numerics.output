@@ -1,0 +1,57 @@
+ Starting numerics test program
+ ===== representation tests ======
+ REALACC(6)
+ r4: digits      24
+ r4: epsilon     1.192093E-7
+ r4: huge        3.402823E+38
+ r4: minexponent -125
+ r4: maxexponent 128
+ r4: precision   6
+ r4: radix       2
+ r4: range       37
+ r4: tiny        1.175494E-38
+ ENDREALACC
+ REALACC(12)
+ r8: digits      53
+ r8: epsilon     2.22044604925031E-16
+ r8: huge        1.79769313486232E+308
+ r8: minexponent -1021
+ r8: maxexponent 1024
+ r8: precision   15
+ r8: radix       2
+ r8: range       307
+ r8: tiny        2.22507385850720E-308
+ ENDREALACC
+ ===== numerics tests ======
+ int1 =  127
+ int2 =  32767
+ int4 =  2147483647
+ int8 =  9223372036854775807
+ huge(int1) =  127
+ huge(int2) =  32767
+ huge(int4) =  2147483647
+ huge(int8) =  9223372036854775807
+ REALACC(6)  r4   =  1.700000E+38  ENDREALACC
+ REALACC(12) r8   =  1.70000000000000E+38  ENDREALACC
+ ===== check variable sizes  ======
+ Variable sizes are as expected
+ ===== detect and print variable sizes ======
+var_type nr_of_words range precision
+       i           4     9
+     i1_           1     2
+     i2_           2     4
+     i4_           4     9
+     i8_           8    18
+      dr           4    37         6
+      s_           4    37         6
+      l_           4    37         6
+      r_           4    37         6
+     r4_           4    37         6
+     r8_           8   307        15
+ ===== dB conversion test ======
+ REALACC(6)
+ input test number:         0.0001230000
+ converted to dB:           -39.10095
+ converted back to a real:  0.0001230000
+ ENDREALACC
+ ===== done ======

@@ -1,0 +1,487 @@
+#!/bin/sh 
+#------------------------------------------------------------------------------#
+# A Bourne shell script for choosing the proper settings in file Makeoptions.  #
+# Supported systems are:                                                       #
+#    LINUX   CygWin   MinGW   OSF1   HP-UX   IRIX   IRIX64   SUNOS   AIX       #
+# Get the name of the operating system. The tr command converts to upper case. #
+#------------------------------------------------------------------------------#
+echo "Set_Makeoptions started"
+
+OSNAME=`uname | tr '[a-z]' '[A-Z]' | tr -d " "`
+echo "  Operating system seems to be: $OSNAME"
+#------------------------------------------------------------------------------#
+# IMPORTANT !!!                                                                #
+# This script will write an include file for the make system.                  #
+# Makefiles require tabs in their commands. The variable ECHOTABCMD therefore  #
+# points to a version of echo that understands the \t command for tabs.        #
+# The settings below were tested at KNMI, but it may be necessary to change    #
+# them for other users.                                                        #
+#------------------------------------------------------------------------------#
+case $OSNAME in
+LINUX | CYGWIN*)
+    ECHOTABCMD="/bin/echo -e"
+    ;;
+OSF1 | SUNOS)
+    ECHOTABCMD="/usr/bin/echo"
+    ;;
+HP-UX | IRIX | IRIX64)
+    ECHOTABCMD="echo"
+    ;;
+AIX)
+    ECHOTABCMD="/bin/echo"
+    ;;
+DARWIN)
+    # use the internal bash command echo
+    # the /bin/echo command on this system is bsd style and does
+    # not support escape sequences like \t for the tab character
+    ECHOTABCMD="echo"
+    ;;
+*)
+    ECHOTABCMD="echo"
+    ;;
+esac
+#------------------------------------------------------------------------------#
+# Print help if first argument equals -h.                                      #
+#------------------------------------------------------------------------------#
+if test "$1" = "-h"
+  then
+  echo ""
+  echo "  Usage of the Set_Makeoptions script:"
+  echo "    Run this script to produce a Makeoptions file"
+  echo "    which is used by all Makefiles in the GenScat tree"
+  echo ""
+  echo "    The following optional environment settings may be supplied"
+  echo "    to change the default compilers/programs used by the Makefiles:"
+  echo "    GENSCAT_LINK    defines which linker is used"
+  echo "    GENSCAT_SHLINK  defines which linker is used for shared objects"
+  echo "    GENSCAT_CLINK   defines which linker is used for c-programs"
+  echo "    GENSCAT_F90     defines which f90 compiler is used"
+  echo "    GENSCAT_F77     defines which f77 compiler is used"
+  echo "    GENSCAT_CC      defines which c   compiler is used"
+  echo "    GENSCAT_RM      defines which rm command is used"
+  echo "    GENSCAT_AR      defines which ar command is used"
+  echo "    GENSCAT_LN      defines which ln command is used"
+  echo ""
+  echo "Set_Makeoptions terminated without making file Makeoptions"
+  exit
+fi
+#------------------------------------------------------------------------------#
+# Set default commands for the make system.                                    #
+#------------------------------------------------------------------------------#
+LINK=f90
+SHLINK=f90
+CLINK=cc
+F90=f90
+F77=f90
+CC=cc
+RM=rm
+AR=ar
+LN=ln
+#------------------------------------------------------------------------------#
+# Set flags used by commands of the make system. Use single quotes to prevent  #
+# the shell from interpretation of the $-sign.                                 #
+#------------------------------------------------------------------------------#
+LINKFLAGS='$(LIB) '
+SHLINKFLAGS='-shared $(LIB) '
+CLINKFLAGS='$(LIB) '
+RMFLAGS="-f "
+ARFLAGS="-rlcs "
+LNFLAGS="-sf"
+#------------------------------------------------------------------------------#
+# Different compilers use different options for the inclusion of module paths. #
+# Most of them use -I, which is therefore adopted as default here.             #
+# The option for inclusion of header file paths is always -I                   #
+# Different compilers use different options for the definition of CPP          #
+# variables at the commandline. Most of them use -D, which is also default.    #
+#------------------------------------------------------------------------------#
+MODINCFLAG=" -I"
+HINCFLAG=" -I"
+CPPDEF=" -D"
+#------------------------------------------------------------------------------#
+# The user may supply additional options. Don't use the -D option here,        #
+# see the remark above for a good reason why.                                  #
+#------------------------------------------------------------------------------#
+  # MYLINKFLAGS
+  # MYSHLINKFLAGS
+  # MYCLINKFLAGS
+  # MYF90FLAGS
+  # MYF77FLAGS
+  # MYCFLAGS
+  # MYRMFLAGS
+  # MYARFLAGS
+  # MYLNFLAGS
+#------------------------------------------------------------------------------#
+# See if non-default compiler options or flags are requested.                  #
+# Use double quotes in the test statement to enable adding options to the      #
+# commands.                                                                    #
+#------------------------------------------------------------------------------#
+if test -n "$GENSCAT_LINK"
+  then
+  echo "  using $GENSCAT_LINK as linker"
+  LINK=$GENSCAT_LINK
+fi
+
+if test -n "$GENSCAT_SHLINK"
+  then
+  echo "  using $GENSCAT_SHLINK as linker for creating shared object files"
+  SHLINK=$GENSCAT_SHLINK
+fi
+
+if test -n "$GENSCAT_CLINK"
+  then
+  echo "  using $GENSCAT_CLINK as linker for c-programs"
+  CLINK=$GENSCAT_CLINK
+fi
+
+if test -n "$GENSCAT_F90"
+  then
+  echo "  using $GENSCAT_F90 as f90 compiler"
+  F90=$GENSCAT_F90
+fi
+
+if test -n "$GENSCAT_F77"
+  then
+  echo "  using $GENSCAT_F77 as f77 compiler"
+  F77=$GENSCAT_F77
+fi
+
+if test -n "$GENSCAT_CC"
+  then
+  echo "  using $GENSCAT_CC as c compiler"
+  CC=$GENSCAT_CC
+fi
+
+if test -n "$GENSCAT_RM"
+  then
+  echo "  using $GENSCAT_RM as rm command"
+  RM=$GENSCAT_RM
+fi
+
+if test -n "$GENSCAT_AR"
+  then
+  echo "  using $GENSCAT_AR as ar command"
+  AR=$GENSCAT_AR
+fi
+
+if test -n "$GENSCAT_LN"
+  then
+  echo "  using $GENSCAT_LN as ln command"
+  LN=$GENSCAT_LN
+fi
+
+case $OSNAME in
+#------------------------------------------------------------------------------#
+#   SETTINGS FOR LINUX, CYGWIN and DARWIN (MAC OSX).                           #
+#   Set code optimalisation.                                                   #
+#------------------------------------------------------------------------------#
+LINUX | CYGWIN* | DARWIN)
+    F90FLAGS="-O -fPIC "
+    F77FLAGS="-O -fPIC "
+    CFLAGS="-O -fPIC -DINTEGER_IS_INT "
+    ;;
+#------------------------------------------------------------------------------#
+#   SETTINGS FOR OSF1.                                                         #
+#   Set code optimalisation.                                                   #
+#------------------------------------------------------------------------------#
+OSF1)
+    F90FLAGS="-O -assume byterecl -DNO_REAL_R8_MISSING_INDICATOR "
+    F77FLAGS="-O -assume byterecl "
+    CFLAGS="-O -DINTEGER_IS_INT "
+    ;;
+#------------------------------------------------------------------------------#
+#   SETTINGS FOR HP-UX.                                                        #
+#   Set code optimalisation.                                                   #
+#   The option to invoke the preprocessor on HP-UX is not yet found, so        #
+#   CPPDEF is set to unknown.                                                  #
+#------------------------------------------------------------------------------#
+HP-UX)
+    F90FLAGS="-O "
+    F77FLAGS="-O "
+    CFLAGS="-O "
+
+    CPPDEF="-unknown "
+    ;;
+#------------------------------------------------------------------------------#
+#   SETTINGS FOR IRIX/IRIX64.                                                  #
+#   Set code optimalisation and use of c preprocessor.                         #
+#------------------------------------------------------------------------------#
+IRIX | IRIX64)
+    F90FLAGS="-O -cpp "
+    F77FLAGS="-O -cpp "
+    CFLAGS="-O "
+    ;;
+#------------------------------------------------------------------------------#
+#   SETTINGS FOR SUNOS.                                                        #
+#   Set code optimalisation and force errors for non-standard fortran code.    #
+#   The shared option is named -G for the sun compiler !!                      #
+#------------------------------------------------------------------------------#
+SUNOS)
+    MODINCFLAG=" -M"
+
+    F90FLAGS="-fast -ansi "
+    F77FLAGS="-fast "
+    CFLAGS="-fast "
+    LINKFLAGS='-fast $(LIB) '
+    CLINKFLAGS='-fast $(LIB) '
+    SHLINKFLAGS='-G $(LIB) '
+    ;;
+#------------------------------------------------------------------------------#
+#   SETTINGS FOR AIX.                                                          #
+#   Use workaround for using the .F90 extension.                               #
+#------------------------------------------------------------------------------#
+AIX)
+    F90FLAGS="-qsuffix=cpp=F90 -qrealsize=4 -qextname -O "
+    F77FLAGS="-O "
+    CFLAGS="-O "
+    LINKFLAGS='-bmaxdata:2000000000 $(LIB) '
+#------------------------------------------------------------------------------#
+#   Conversion of compiler directives can be done in a Makefile using this     #
+#   definition.                                                                #
+#------------------------------------------------------------------------------#
+    CPPDEF=" -WF,-D"
+    ;;
+#------------------------------------------------------------------------------#
+#   SETTINGS FOR ANY OTHER OS.                                                 #
+#   Set code optimalisation.                                                   #
+#------------------------------------------------------------------------------#
+*)
+    F90FLAGS="-O "
+    F77FLAGS="-O "
+    CFLAGS="-O "
+    ;;
+esac
+
+#------------------------------------------------------------------------------#
+# Set flags in case a non-default compiler is chosen                           #
+#------------------------------------------------------------------------------#
+
+#------------------------------------------------------------------------------#
+# Settings for GNU gfortran compiler.                                          #
+#------------------------------------------------------------------------------#
+TEST_GFORTRAN=`echo "$F90" | grep "gfortran"`
+if test -n "$TEST_GFORTRAN"
+  then
+  F90FLAGS="${F90FLAGS} -g -Wall -fbounds-check -Wextra "
+  MODINCFLAG=" -I"
+  SHLINKFLAGS='-shared $(LIB) '
+  CPPDEF=" -D"
+fi
+
+#------------------------------------------------------------------------------#
+# Settings for GNU g95 compiler.                                               #
+#------------------------------------------------------------------------------#
+TEST_G95=`echo "$F90" | grep "g95"`
+if test -n "$TEST_G95"
+then
+#------------------------------------------------------------------------------#
+# Switch off the GNU g95 default double underscores for coupling c and         #
+# fortran programs, since this differs from most other compilers.              #
+# Switch on all available warnings, just to be sure. Equivalent to:            #
+#     -Wprecision-loss -Wunused-label -Wunused-module-vars                     #
+#     -Wunused-vars    -Wunset-vars                                            #
+# Force strict F95 standard code, and apply some experimental settings.        #
+#------------------------------------------------------------------------------#
+  F90FLAGS="${F90FLAGS} -g "
+  F90FLAGS="${F90FLAGS} -fno-second-underscore "
+  F90FLAGS="${F90FLAGS} -Wall "
+  F90FLAGS="${F90FLAGS} -std=f95 "
+  F90FLAGS="${F90FLAGS} -fbounds-check -freal=nan "
+  F90FLAGS="${F90FLAGS} -ftrace=full "
+
+#------------------------------------------------------------------------------#
+# This allows the use of the "system()" extension,                             #
+# which is only needed if you wish to use the gnuplot_wrapper module           #
+#------------------------------------------------------------------------------#
+  F90FLAGS="${F90FLAGS} -fintrinsic-extensions=system "
+
+  MODINCFLAG=" -I"
+  SHLINKFLAGS='-shared $(LIB) '
+  CPPDEF=" -D"
+fi
+
+#------------------------------------------------------------------------------#
+# Settings for ifort compiler.                                                 #
+#------------------------------------------------------------------------------# 
+TEST_IFORT=`echo "$F90" | grep "ifort"`
+if test -n "$TEST_IFORT"
+then
+#------------------------------------------------------------------------------#
+# Force errors in case non-standard fortran code is used to increase           #
+# portability of the code.                                                     #
+#------------------------------------------------------------------------------#
+  F90FLAGS="${F90FLAGS} -std90 -warn all "
+# possible other debug settings are:
+# -stand f95 -warn stderrors
+# -std95
+
+#------------------------------------------------------------------------------#
+# The next option forces the record length specification to be in bytes,       #
+# like all other compilers that we use do instead of 4 byte words.             #
+# See: http://softwareforums.intel.com/ids/board/                              #
+#           /message?board.id=11&message.id=1414                               #
+# This may be only applicable to ifort8?                                       #
+#------------------------------------------------------------------------------#
+  F90FLAGS="${F90FLAGS} -assume byterecl "
+
+  MODINCFLAG=" -I"
+  SHLINKFLAGS='-shared $(LIB) '
+  CPPDEF=" -D"
+fi
+
+echo "  using: F90FLAGS = ${F90FLAGS}"
+echo "  using: F77FLAGS = ${F77FLAGS}"
+echo "  using: CFLAGS   = ${CFLAGS}"
+
+#################################################################
+# set a switch wich decides which Compiler_Features module,
+# which is compiler-dependent, is used
+#################################################################
+
+CMP_EXT="generic"
+
+# first look at the OSNAME to decide what to do
+case $OSNAME in
+LINUX | DARWIN)
+  CMP_EXT="generic"
+  ;;
+AIX)
+  CMP_EXT="aix"
+  ;;
+SUNOS)
+  CMP_EXT="sunforte"
+  ;;
+esac
+
+# then look at the compiler type to decide what to do
+if test -n "$TEST_GFORTRAN"
+then
+  CMP_EXT="gfortran"
+fi
+if test -n "$TEST_G95"
+then
+  CMP_EXT="generic"
+fi
+if test -n "$TEST_IFORT"
+then
+  CMP_EXT="ifort"
+fi
+TEST_F95=`echo "$F90" | grep "f95"`
+if test -n "$TEST_F95"
+then
+  CMP_EXT="f95"
+fi
+
+#------------------------------------------------------------------------------#
+# Build the Makeoptions file,                                                  #
+#------------------------------------------------------------------------------#
+FILE="Makeoptions"
+
+echo "# This Makeoptions file is ment to be included in every"        > $FILE
+echo "# Makefile in the genscat tree, and in the application trees"  >> $FILE
+echo "# that use genscat"                                            >> $FILE
+echo "# This file is automatically generated"                        >> $FILE
+echo "#"                                                             >> $FILE
+echo "# A user may use one of the "MY" flags specified below to add" >> $FILE
+echo "# his own options to each of these commands, or may leave"     >> $FILE
+echo "# them undefined"                                              >> $FILE
+echo ""                                                              >> $FILE
+echo "LINK       = ${LINK}"                                          >> $FILE
+echo "LINKFLAGS  = ${LINKFLAGS}"                                     >> $FILE
+echo "# the user may supply: MYLINKFLAGS"                            >> $FILE
+echo ""                                                              >> $FILE
+echo "SHLINK       = ${SHLINK}"                                      >> $FILE
+echo "SHLINKFLAGS  = ${SHLINKFLAGS}"                                 >> $FILE
+echo "# the user may supply: MYSHLINKFLAGS"                          >> $FILE
+echo ""                                                              >> $FILE
+echo "CLINK       = ${CLINK}"                                        >> $FILE
+echo "CLINKFLAGS  = ${CLINKFLAGS}"                                   >> $FILE
+echo "# the user may supply: MYCLINKFLAGS"                           >> $FILE
+echo ""                                                              >> $FILE
+echo "F90        = ${F90}"                                           >> $FILE
+echo "F90FLAGS   = ${F90FLAGS}"                                      >> $FILE
+echo "# the user may supply: MYF90FLAGS"                             >> $FILE
+echo ""                                                              >> $FILE
+echo "F77        = ${F77}"                                           >> $FILE
+echo "F77FLAGS   = ${F77FLAGS}"                                      >> $FILE
+echo "# the user may supply: MYF77FLAGS"                             >> $FILE
+echo ""                                                              >> $FILE
+echo "MODINCFLAG = ${MODINCFLAG}"                                    >> $FILE
+echo ""                                                              >> $FILE
+echo "HINCFLAG   = ${HINCFLAG}"                                      >> $FILE
+echo ""                                                              >> $FILE
+echo "CPPDEF     = ${CPPDEF}"                                        >> $FILE
+echo ""                                                              >> $FILE
+echo "CMP_EXT    = ${CMP_EXT}"                                       >> $FILE
+echo ""                                                              >> $FILE
+echo "CC         = ${CC}"                                            >> $FILE
+echo "CFLAGS     = ${CFLAGS}"                                        >> $FILE
+echo "# the user may supply: MYCFLAGS"                               >> $FILE
+echo ""                                                              >> $FILE
+echo "RM         = ${RM}"                                            >> $FILE
+echo "RMFLAGS    = ${RMFLAGS}"                                       >> $FILE
+echo "# the user may supply: MYRMFLAGS"                              >> $FILE
+echo ""                                                              >> $FILE
+echo "AR         = ${AR}"                                            >> $FILE
+echo "ARFLAGS    = ${ARFLAGS}"                                       >> $FILE
+echo "# the user may supply: MYARFLAGS"                              >> $FILE
+echo ""                                                              >> $FILE
+echo "LN         = ${LN}"                                            >> $FILE
+echo "LNFLAGS    = ${LNFLAGS}"                                       >> $FILE
+echo "# the user may supply: MYLNFLAGS"                              >> $FILE
+echo ""                                                              >> $FILE
+echo "# Remove all default suffixes to avoid problems with implicit" >> $FILE
+echo "# definitions and define the suffixes we use explicitly"       >> $FILE
+echo ".SUFFIXES:"                                                    >> $FILE
+echo ".SUFFIXES: .f90 .F90 .f .F .c .o"                              >> $FILE
+echo ""                                                              >> $FILE
+echo "# C compile command"                                           >> $FILE
+echo ".c.o:"                                                         >> $FILE
+#------------------------------------------------------------------------------#
+# Use the echo command specified in the beginning of this script to enable     #
+# writing the tab character with \t. Single quotes prevent the shell from      #
+# interpreting the $ sign.                                                     #
+#------------------------------------------------------------------------------#
+${ECHOTABCMD} '\t$(CC) $(CFLAGS) $(MYCFLAGS) $(INC) -c $< '          >> $FILE
+echo ""                                                              >> $FILE
+echo "# Fortran90 compile command"                                   >> $FILE
+echo ".f90.o .F90.o:"                                                >> $FILE
+
+case $OSNAME in
+#------------------------------------------------------------------------------#
+#   Exception for enabling preprocessing on HP-UX.                             #
+#   Use gcc for preprocessing: -E runs the preprocessor, and -P prevents the   #
+#   generation of "#line" commands.                                            #
+#------------------------------------------------------------------------------#
+HP-UX)
+    ${ECHOTABCMD} '\techo "copying $< to temporary file: temp.c"'                        >> $FILE
+    ${ECHOTABCMD} '\t\\cp -f $< temp.c'                                                  >> $FILE
+    ${ECHOTABCMD} '\techo "preprocessing temporary file: temp.c"'                        >> $FILE
+    ${ECHOTABCMD} '\tgcc -E -P -o temp.f90 temp.c'                                       >> $FILE
+    ${ECHOTABCMD} '\techo "compiling temporary file: temp.f90"'                          >> $FILE
+    ${ECHOTABCMD} '\t$(F90) $(F90FLAGS) $(MYF90FLAGS) $(INC) -c temp.f90'                >> $FILE
+    ${ECHOTABCMD} '\techo "copying temporary file: temp.o to wanted file: $(<:.F90=.o)"' >> $FILE
+    ${ECHOTABCMD} '\tmv temp.o $(<:.F90=.o)'                                             >> $FILE
+    ${ECHOTABCMD} '\techo "removing temporary file: temp.c"'                             >> $FILE
+    ${ECHOTABCMD} '\t\\rm -f temp.c '                                                    >> $FILE
+    ;;
+#------------------------------------------------------------------------------#
+#   No exception for other supported systems.                                  #
+#------------------------------------------------------------------------------#
+LINUX | CYGWIN* | DARWIN | IRIX | IRIX64 | OSF1 | SUNOS | AIX)
+    ${ECHOTABCMD} '\t$(F90) $(F90FLAGS) $(MYF90FLAGS) $(INC) -c $<'  >> $FILE
+    ;;
+#------------------------------------------------------------------------------#
+#   Warning for unsupported systems.                                           #
+#------------------------------------------------------------------------------#
+*)
+    ${ECHOTABCMD} '\t$(F90) $(F90FLAGS) $(MYF90FLAGS) $(INC) -c $<'  >> $FILE
+    echo "  OS not supported. Check your Makeoptions file!"
+    ;;
+esac
+
+echo ""                                                              >> $FILE
+echo "# Fortran77 compile command"                                   >> $FILE
+echo ".f.o .F.o:"                                                    >> $FILE
+${ECHOTABCMD} '\t$(F77) $(F77FLAGS) $(MYF77FLAGS) $(INC) -c $<'      >> $FILE
+
+echo "Set_Makeoptions completed"
