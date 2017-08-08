@@ -52,9 +52,9 @@ run the program: ./rfscat_simulation <your rfscat settings file>
 names of the output files are defined in the settings file
 
 
-Testing data files: please contact scat@knmi.nl 
-PL1B data
-LUT (look up tables)
+Testing data files: please contact scat@knmi.nl for
+
+PL1B data and LUT (look up tables)
                 
 For big-endian (typically unix systems) you need to point the nrcs_luts
 symbolic link to the directory  with LUT_bigendian
