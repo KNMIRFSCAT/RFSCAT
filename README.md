@@ -51,6 +51,7 @@ run the program: ./rfscat_simulation <your rfscat settings file>
 
 names of the output files are defined in the settings file
 
+Please also refer to our scatterometer page for more information http://projects.knmi.nl/scatterometer/rfscat/ 
 
 Testing data files: please contact scat@knmi.nl for
 
