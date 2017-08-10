@@ -127,6 +127,9 @@ inversion.F90: $(GENSCAT)inversion/inversion.F90
 #-----------------------------------------
 # the clean target
 #-----------------------------------------
+../genscat/Makeoptions:
+	cd ../genscat; ./Set_Makeoptions
+
 # remove all object files, de @ makes the command silent
 .PHONY : clean
 clean   :
