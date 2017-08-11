@@ -1,0 +1,28 @@
+# ignore files with given extension
+*.o
+*.mod
+
+# ignore generated executables
+genscat/inversion/test_inv
+genscat/support/Compiler_Features/TestCompiler_Features
+genscat/support/ErrorHandler/TestErrorHandler
+genscat/support/binning/test_binning_1D
+genscat/support/c_support/test_c_support
+genscat/support/constants/test_constants
+genscat/support/convert/test_convert
+genscat/support/file/TestLunManager
+genscat/support/file/TestReadUnformatted
+genscat/support/gnuplot_wrapper/TestGnuPlotModule
+genscat/support/gnuplot_wrapper/TestGnuPlotModule2
+genscat/support/num/test_numerics
+genscat/support/sort/SortModTest
+genscat/support/stringtools/TestStringTools
+genscat/support/tempfiles/TestTempFileHandling
+genscat/support/timers/test_timers
+rfscat/rfscat_simulation
+
+# ignore a symbolic link created by the Makefile
+genscat/support/Compiler_Features/Compiler_Features.F90
+
+# ignore a source file copied by the Makefile
+rfscat/inversion.F90
