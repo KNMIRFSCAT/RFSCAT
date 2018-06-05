@@ -32,7 +32,7 @@
 # This settings file should be fairly insensitive to changes in whitespace
 # between lowercase/uppercase.
 #
-#                J. de Kloe, KNMI, 2009-2013
+#                J. de Kloe, KNMI, 2009-2018
 #
 #####################################################################
 
@@ -64,12 +64,12 @@ silent = .false.
 # controlled by the following switches:
 #
 
-pseudo_L1b_file_path         = ./testdata/
-pseudo_L1b_file_name         = KVH_prf75_2000km_25km_py_optim_boxcar_cfosat_final_only_col_19.l1b
+pseudo_L1b_file_path         = ./data/
+pseudo_L1b_file_name         = CV_example.l1b
 use_2nd_pseudo_L1B_file      = .false.
-pseudo_L1b_2nd_file_name     = CH_a00_01_bestsystem.l1b
+pseudo_L1b_2nd_file_name     = undefined
 use_3rd_pseudo_L1B_file      = .false.
-pseudo_L1b_3rd_file_name     = CP_a00_01_bestsystem.l1b
+pseudo_L1b_3rd_file_name     = undefined
 
 #
 # The winds used as starting point for the simulation are defined
@@ -259,7 +259,7 @@ noise_add_method             = multiplicative
 # path where the binary look-up-tables defining the GMF for the
 # different bands and polarisations can be found
 #
-LUT_path = nrcs_luts/
+LUT_path = data/
 
 #
 # filenames to use for the look-up-tables defining the GMF for the
