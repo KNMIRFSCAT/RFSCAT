@@ -26,3 +26,10 @@ genscat/support/Compiler_Features/Compiler_Features.F90
 
 # ignore a source file copied by the Makefile
 rfscat/inversion.F90
+
+# ignore the generated make options file
+genscat/Makeoptions
+
+# ignore any new files in the data and results folder
+rfscat/data
+rfscat/results

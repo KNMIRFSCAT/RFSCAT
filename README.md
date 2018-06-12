@@ -37,6 +37,8 @@ you may have installed.
 ```
 make 
 ```
+If all runs well, the executable rfscat_simulation should be
+present now inside the rfscat folder.
 
 Usage:
 define the simulation settings, these are defined in an ascii input
@@ -52,7 +54,7 @@ Please also refer to our scatterometer page for more information http://projects
 Testing data files: please contact scat@knmi.nl for
 
 PL1B data and LUT (look up tables)
-                
+
 For big-endian (typically unix systems) you need to point the nrcs_luts
 symbolic link to the directory  with LUT_bigendian
 
